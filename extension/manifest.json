@@ -1,0 +1,10 @@
+{
+	"name": "Search on Gooel",
+	"description": "Adds a Search Google for ... to the context menu",
+	"version": "0.1",
+	"permissions": ["contextMenus"],
+	"background": {
+		"scripts": ["sample.js"]
+	},
+	"manifest_version": 2
+}
