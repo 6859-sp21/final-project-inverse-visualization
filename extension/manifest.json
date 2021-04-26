@@ -1,10 +1,17 @@
 {
-	"name": "Search on Gooel",
-	"description": "Adds a Search Google for ... to the context menu",
+	"name": "Deredner Visualization",
+	"description": "Change a visualization image you see",
 	"version": "0.1",
-	"permissions": ["contextMenus"],
+	"permissions": ["contextMenus", "tabs"],
 	"background": {
 		"scripts": ["sample.js"]
 	},
+	"chrome_url_overrides": {
+		"newtab": "newpage.html"
+	},
+	"content_scripts": [{
+		"js": ["newpage.js"],
+		"matches": ["http://*/*", "https://*/*"]
+	}],
 	"manifest_version": 2
 }

@@ -1,13 +1,15 @@
-function search(info, tab) {
+function deRender(info, tab) {
+	console.log(info)
+	localStorage.sharedData = JSON.stringify({info: info});
 	chrome.tabs.create({
-		url: 'http://www.google.com/search?q=' + encodeURIComponent(info.selectionText)
+		url: 'chrome://newtab'
 	});
 }
 
 (function() {
 	var id = chrome.contextMenus.create({
-		title: 'Search google for "%s"',
-		contexts: ['selection'],
-		onclick: search
+		title: 'Derender this image!',
+		contexts: ['image'],
+		onclick: deRender
 	});
 })();
