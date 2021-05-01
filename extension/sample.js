@@ -2,7 +2,7 @@ function deRender(info, tab) {
 	console.log(info)
 	localStorage.sharedData = JSON.stringify({info: info});
 	chrome.tabs.create({
-		url: 'chrome://newtab'
+		url: 'newpage.html'
 	});
 }
 

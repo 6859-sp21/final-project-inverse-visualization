@@ -16,9 +16,15 @@ def main():
 @app.route('/derender')
 def derender():
     try:
+        stats = []
+        for i in range(10):
+            stats.append({
+                'text': 'tip ' + str(i),
+                'x': random.randint(0,400),
+                'y': random.randint(0,200)})
         response = {
             "message": "Your stats",
-            "stats": (random.randint(0,100),random.randint(0,100)),
+            "stats": stats,
         }
         return jsonify(response)
     except Exception as e:

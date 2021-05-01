@@ -22,3 +22,15 @@
     cursor: pointer;
     border-radius: 8px;
 }
+
+#image-container {
+    position: relative;    
+}
+
+#text-tooltip {
+    position: absolute;
+     
+    padding: 5px;
+    background-color: white;
+    border: 2px solid red;
+ }

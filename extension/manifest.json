@@ -6,9 +6,6 @@
 	"background": {
 		"scripts": ["sample.js"]
 	},
-	"chrome_url_overrides": {
-		"newtab": "newpage.html"
-	},
 	"content_scripts": [{
 		"js": ["newpage.js"],
 		"matches": ["http://*/*", "https://*/*"]
