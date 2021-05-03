@@ -1,6 +1,8 @@
 <template>
   <div class="editor">
-    <div class="image-frame">
+    <h2 class="h">Inverse Viz Editor</h2>
+    <p class="h" v-if="loading">Loading ...</p>
+    <div class="image-frame" v-if="!loading">
       <template v-if="!loading">
         <Bar
           v-for="bar in this.meta.layers.mark.entities"
@@ -75,6 +77,10 @@ export default {
 <style lang="scss" scoped>
 .image-frame {
   position: relative;
+}
+
+.h {
+  padding-left: 2rem;
 }
 
 img {
