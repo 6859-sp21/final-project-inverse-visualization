@@ -6,25 +6,25 @@ try {
     document.getElementById("image").src = sharedData.info.srcUrl;
 
     fetch(sharedData.info.srcUrl)
-    .then(r => r.blob())
-    .then((blob) => console.log(blob));
+        .then(r => r.blob())
+        .then((blob) => console.log(blob));
 
-} 
-catch (e) {}
+}
+catch (e) { }
 
 derenderImage = () => {
-    fetch('http://localhost:5000/derender', 
+    fetch('http://localhost:5000/derender',
         {
             method: 'POST', // or 'PUT'
             headers: {
-            'Content-Type': 'application/json',
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({'image': sharedData.info.srcUrl}),
+            body: JSON.stringify({ 'image': sharedData.info.srcUrl }),
         })
         .then(response => response.json())
         .then(data => {
-            
-            for( let i = 0 ; i < data.stats.length ; i ++){
+
+            for (let i = 0; i < data.stats.length; i++) {
                 stat = data.stats[i]
                 imageDerender[stat.text] = stat.text
                 addTooltip(stat.text, stat.x, stat.y)
@@ -33,17 +33,17 @@ derenderImage = () => {
 }
 
 submitChanges = () => {
-    fetch('http://localhost:5000/changes', 
+    fetch('http://localhost:5000/changes',
         {
             method: 'POST', // or 'PUT'
             headers: {
-            'Content-Type': 'application/json',
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({'changes': imageDerender}),
+            body: JSON.stringify({ 'changes': imageDerender }),
         })
         .then(response => response.json())
         .then(data => {
-            
+
         });
 }
 
@@ -54,10 +54,10 @@ addTooltip = (text, x, y) => {
     input.type = "text";
     input.value = text;
     input.id = 'text-tooltip';
-    input.style.width = '30px'; 
+    input.style.width = '30px';
     input.style.height = '10px';
     input.style.left = `${x}px`;
-    input.style.top = `${y}px`; 
+    input.style.top = `${y}px`;
 
     input.addEventListener('input', (e) => {
         console.log(text, '=>', e.target.value);
@@ -69,11 +69,11 @@ addTooltip = (text, x, y) => {
     imageContainer.appendChild(input);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     var button = document.getElementById('submit');
     var initial = true;
-    button.addEventListener('click', function() {
-        
+    button.addEventListener('click', function () {
+
         if (initial) {
             derenderImage();
             button.innerHTML = 'Submit!'
