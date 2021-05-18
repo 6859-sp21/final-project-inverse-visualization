@@ -30,6 +30,26 @@ def main(argv):
     plt.title("COVID-19 Incedence Rate By Age", fontname="Arial")
     plt.savefig("examples/covid.png")
 
+    plt.clf()
+    np.random.seed(1337)
+
+    Ms = [1.2, 3.2]
+    Cs = [10, 1]
+    colors = ["red", "#fc6203"]
+
+    for m, c, color in zip(Ms, Cs, colors):
+        X = np.linspace(3, 20, 20)
+        Y = m * X + c
+        Y += np.random.normal(0, scale=6, size=len(Y))
+
+        plt.scatter(X, Y, color=color)
+
+    plt.xticks(fontname="Arial")
+    plt.yticks(fontname="Arial")
+    plt.xlabel("THR2 Gene Response", fontname="Arial")
+    plt.title("Protein Site First and Second", fontname="Arial")
+    plt.savefig("examples/gene.png")
+
 
 if __name__ == "__main__":
     app.run(main)

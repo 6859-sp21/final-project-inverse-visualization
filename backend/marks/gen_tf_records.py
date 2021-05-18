@@ -54,6 +54,12 @@ def create_tf_example(example):
     return tf_example
 
 
+_CLASS_MAP = {
+    "bar": 1,
+    "point": 2,
+}
+
+
 def filename_example(filename, meta):
     id_ = int(os.path.splitext(os.path.basename(filename))[0])
     img = cv2.imread(filename)
@@ -69,6 +75,9 @@ def filename_example(filename, meta):
     ymins = []
     ymaxs = []
 
+    class_texts = []
+    class_ids = []
+
     for box in boxes:
         x1 = box["x1"] / w
         x2 = box["x2"] / w
@@ -83,8 +92,13 @@ def filename_example(filename, meta):
         ymins.append(y1)
         ymaxs.append(y2)
 
-    class_texts = ["box".encode("ascii")] * len(xmins)
-    class_ids = [1] * len(xmins)
+        class_text = box["encoding"]
+
+        class_texts.append(class_text.encode("ascii"))
+        class_ids.append(_CLASS_MAP[class_text])
+
+    # class_texts = ["box".encode("ascii")] * len(xmins)
+    # class_ids = [1] * len(xmins)
 
     return (
         filename,
@@ -134,15 +148,17 @@ def main(_):
     gen_records(train_examples, os.path.join(FLAGS.output, "train.tfrecords"))
     gen_records(test_examples, os.path.join(FLAGS.output, "test.tfrecords"))
 
-    LMAP = """
+    LMAP_TEMPLATE = """
 item {
-  id: 1
-  name: 'box'
+  id: %i
+  name: '%s'
 }
 """
 
+    lmap = "\n".join([LMAP_TEMPLATE % (id_, name) for name, id_ in _CLASS_MAP.items()])
+
     with open(os.path.join(FLAGS.output, "labelmap.txt"), "w") as f:
-        f.write(LMAP)
+        f.write(lmap)
 
 
 if __name__ == "__main__":

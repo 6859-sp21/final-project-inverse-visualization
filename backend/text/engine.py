@@ -20,7 +20,7 @@ class TextDerenderEngine(object):
 
         final_boxes = []
 
-        for text in texts:
+        for i, text in enumerate(texts):
             (x0, y0), _, (x1, y1), _ = txt_to_bb[text]
 
             xmin = x0
@@ -30,6 +30,7 @@ class TextDerenderEngine(object):
 
             final_boxes.append(
                 {
+                    "id": i,
                     "type": "text",
                     "text": text,
                     "box": (xmin, ymin, xmax, ymax),

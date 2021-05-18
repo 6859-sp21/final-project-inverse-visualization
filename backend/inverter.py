@@ -16,7 +16,7 @@ class Inverter(object):
         self.text_engine = TextDerenderEngine(
             keypath="text/GoogleVisionToken.json", fontfile="text/Arial.ttf"
         )
-        self.mark_engine = EncodingDerenderEngine(box_model_path="marks/box_model")
+        self.mark_engine = EncodingDerenderEngine(box_model_path="marks/box_model2")
 
     def derender(self, img):
         h, w, _ = img.shape

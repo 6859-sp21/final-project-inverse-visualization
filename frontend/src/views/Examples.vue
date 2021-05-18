@@ -8,7 +8,7 @@
     </p>
     <p>
       <strong
-        >MVP Warning: Only works with bar plots created using
+        >Prototype Warning: Only works with bar and scatter plots created using
         matplotlib.</strong
       >
     </p>
@@ -26,6 +26,13 @@
         query: { url: 'https://i.imgur.com/W1eZaSk.png' },
       }"
       ><img src="https://i.imgur.com/W1eZaSk.png" alt=""
+    /></router-link>
+    <router-link
+      :to="{
+        name: 'Editor',
+        query: { url: 'https://i.imgur.com/n5stUT4.png' },
+      }"
+      ><img src="https://i.imgur.com/n5stUT4.png" alt=""
     /></router-link>
     <router-link
       :to="{

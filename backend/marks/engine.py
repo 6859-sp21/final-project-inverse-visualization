@@ -2,7 +2,6 @@ from absl import app
 from absl import flags
 
 import numpy as np
-import cv2
 
 from . import data_gen
 import tensorflow as tf
@@ -31,6 +30,13 @@ def empty_plot():
     return Image.fromarray(img_arr)
 
 
+_CLASS_MAP = {1: "bar", 2: "point"}
+
+
+def color_dist(c1, c2):
+    return np.linalg.norm(c2 - c1)
+
+
 class EncodingDerenderEngine(object):
     def __init__(self, box_model_path="box_model"):
         self.box_model = tf.saved_model.load(box_model_path)
@@ -50,8 +56,12 @@ class EncodingDerenderEngine(object):
         classes = classes[scores > self.detect_thresh]
 
         final_boxes = []
+        colors = []
 
-        for box in boxes:
+        for i, (class_, box) in enumerate(zip(classes, boxes)):
+            class_index = int(class_.numpy())
+            class_name = _CLASS_MAP[class_index]
+
             ymin, xmin, ymax, xmax = box
 
             ymin *= h
@@ -68,11 +78,74 @@ class EncodingDerenderEngine(object):
             ymin = int(ymin)
 
             color = tuple(int(x) for x in img[cy, cx])
+            color_array = np.array(color)
 
-            final_boxes.append(
-                # TODO(shreyask): ymax baseline.
-                {"type": "bar", "box": (xmin, ymin, xmax, 428), "color": color}
+            if color_dist(np.array([255, 255, 255]), color_array) < 5:
+                continue
+
+            skip = False
+            for c in colors:
+                if color_dist(c, color_array) < 10:
+                    skip = True
+
+            if not skip:
+                colors.append(color_array)
+
+        for i, (class_, box) in enumerate(zip(classes, boxes)):
+            class_index = int(class_.numpy())
+            class_name = _CLASS_MAP[class_index]
+
+            ymin, xmin, ymax, xmax = box
+
+            ymin *= h
+            ymax *= h
+            xmax *= w
+            xmin *= w
+
+            cx = int((xmax + xmin) / 2)
+            cy = int((ymax + ymin) / 2)
+
+            xmax = int(xmax)
+            ymax = int(ymax)
+            xmin = int(xmin)
+            ymin = int(ymin)
+
+            color = tuple(int(x) for x in img[cy, cx])
+            color_array = np.array(color)
+
+            if color_dist(np.array([255, 255, 255]), color_array) < 5:
+                continue
+
+            closest = tuple(
+                min(
+                    [(c, color_dist(c, color_array)) for c in colors],
+                    key=lambda x: x[-1],
+                )[0]
             )
+            closest = tuple(int(x) for x in closest)
+
+            if class_name == "bar":
+                final_boxes.append(
+                    # TODO(shreyask): ymax baseline.
+                    {
+                        "id": i,
+                        "type": class_name,
+                        "box": (xmin, ymin, xmax, 428),
+                        "color": closest,
+                    }
+                )
+            else:
+                r = int(min(xmax - xmin, ymax - ymin) / 2)
+
+                final_boxes.append(
+                    # TODO(shreyask): ymax baseline.
+                    {
+                        "id": i,
+                        "type": class_name,
+                        "box": (cx - r, cy - r, cx + r, cy + r),
+                        "color": closest,
+                    }
+                )
 
         return {
             "layer": "encodings",
@@ -87,9 +160,11 @@ class EncodingDerenderEngine(object):
         draw = ImageDraw.Draw(img)
 
         for entity in meta["entities"]:
-            if entity["type"] != "bar":
-                continue
-            draw.rectangle(entity["box"], fill=tuple(entity["color"]))
+            if entity["type"] == "bar":
+                draw.rectangle(entity["box"], fill=tuple(entity["color"]))
+
+            if entity["type"] == "point":
+                draw.ellipse(entity["box"], fill=tuple(entity["color"]))
 
         img.paste(empty, (0, 0), empty)
 
