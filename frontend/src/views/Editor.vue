@@ -85,8 +85,7 @@ export default {
       const colors = e
         .map((x) => JSON.stringify(x.color))
         .filter((x) => x !== "[255, 255, 255]")
-        .filter((v, i, s) => s.indexOf(v) === i)
-        .sort();
+        .filter((v, i, s) => s.indexOf(v) === i);
       const series = colors
         .map((color) => e.filter((x) => JSON.stringify(x.color) === color))
         .map((x, i) => ({
