@@ -1,5 +1,7 @@
 # Data Vis Decompiler
 
+![Website](https://img.shields.io/website?url=https%3A%2F%2Finverse.firemeet.io%2F)
+
 [[Video]](https://www.youtube.com/watch?v=JmG8-sZFIbM) [[Website]](https://inverse.firemeet.io/) [[Paper]](final/final.pdf)
 
 #### Abstract
